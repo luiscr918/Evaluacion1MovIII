@@ -30,7 +30,7 @@ class Ejercicio2screen extends StatelessWidget {
             opacity: 0.5,
           ),
         ),
-        child: formulario(),
+        child: formulario(context),
       ),
     );
   }
@@ -38,7 +38,7 @@ class Ejercicio2screen extends StatelessWidget {
 TextEditingController volumen=TextEditingController();
 TextEditingController tiempo=TextEditingController();
 TextEditingController goteo=TextEditingController();
-Widget formulario(){
+Widget formulario(context){
   return Column(children: [
     TextField(
       controller: volumen,
@@ -61,9 +61,33 @@ Widget formulario(){
         label: Text("Ingrese el Factor de goteo(ej: 20 gotas/mL para macrogotero)")
       ),
     ),
-    FilledButton.icon(onPressed: ()=>(), label: Text("CALCULAR"))
+    FilledButton.icon(onPressed: ()=>calcular(context), label: Text("CALCULAR"))
   ],);
 }
-void calcular(){
-  
+void calcular(context){
+  double tiempito=double.parse(tiempo.text);
+  double volumencito=double.parse(volumen.text);
+  double goteito=double.parse(goteo.text);
+  if (tiempito==0) {
+    showDialog(context: context, builder:(context) {
+    return AlertDialog(
+      title:Text("Error") ,
+      content: Column(children: [
+        Text("El tiempo debe ser mayor a 0"),
+      ],),
+    );
+  },);
+  }else{
+    double resultado=(volumencito*goteito)/(tiempito*60);
+    showDialog(context: context, builder:(context) {
+    return AlertDialog(
+      title:Text("Gotas por minuto") ,
+      content: Column(children: [
+        Text("Las gotas por minuto para fundir son ${resultado.toStringAsFixed(2)}"),
+      ],),
+    );
+  },);
+  }
 }
+
+/* Fórmula: Gotas/min = (Volumen * Factor) / (Tiempo * 60) */
